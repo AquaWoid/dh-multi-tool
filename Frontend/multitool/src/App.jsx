@@ -1,24 +1,48 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import axios from "axios";
+import Plot from "react-plotly.js"
 
 function App() {
 
   const [items, setItems] = useState([])
+  const [jsonSequecnce, setJson] = useState([])
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/items")
     .then((response) => {
      setItems(Object.values(response.data));
-      console.log(response.data)
+     setJson(response.data)
+      console.log(response.data);
+      console.log("MAPPED ITEMS: " + items.map((item, index) => (console.log(item.name, index))));
     }).catch((error) => {
-      console.log("There was an error retrieving the todo list: ", error);
+      console.log("There was an error retrieving the list: ", error);
     });
   }, []);
+
+
+
+  const jObj = {
+    "x": [1, 2, 3, 4, 5],
+    "y": [10, 15, 7, 12, 18]
+  }
 
   return (
     <>
 
+
+      <Plot 
+
+      data={[
+        {
+          x: items.id,
+          y: items.price,
+          type: "bar",
+          mode: "lines+markers",
+        },
+      ]}
+      layout={{"title" : "Json"}}  
+      />
 
       <ul>
         {items ? items.map((item, index) => (
